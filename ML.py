@@ -16,7 +16,7 @@ def accuracy_distance2(truth, prediction):
 	error_sum = 0
 	for i in range (0,len(truth)):
 		err = abs(truth[i] - prediction[i])
-		if err >= 2:
+		if err >= 10:
 			error_sum += 1.0
 
 	return 1 - (error_sum / len(truth))

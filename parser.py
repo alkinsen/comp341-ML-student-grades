@@ -3,7 +3,7 @@ import csv
 class CSVParser():
 
 	def normalize(self, data, max):
-		return float(data) / float(max)
+		return int(round(float(data) / float(max) * 100))
 
 	def parse(self, location):
 
@@ -43,11 +43,11 @@ class CSVParser():
 				#guardian: ommitted
 				traveltime = self.normalize(int(row[12])-1, 3)
 				studytime = self.normalize(int(row[13])-1, 3)
-				failures = self.normalize(int(row[14])-1,3)
+				failures = self.normalize(int(row[14]),4)
 
 				schoolsup = 0 #no
 				if row[15] == 'yes':
-					schoolsup = 1;
+					schoolsup = 1
 
 				famsup = 0 #no
 				if row[16] == 'yes':
@@ -84,16 +84,19 @@ class CSVParser():
 				walc = self.normalize(int(row[27])-1, 4)
 				health = self.normalize(int(row[28])-1, 4)
 				absences = self.normalize(int(row[29]), 93)
+
 				g1 = self.normalize(int(row[30]), 20)
 				g2 = self.normalize(int(row[31]), 20)
 				f = self.normalize(int(row[32]), 20)
+				avrg = int(round((g1 * 0.3 + g2 * 0.3 + f * 0.4)))
 
-				avrg = g1 * 0.3 + g2 * 0.3 + f * 0.4
-
-				data_list.append((school, sex, age, address, famsize, pstatus, medu, fedu, traveltime, studytime,failures,
-				schoolsup, famsup, paid, activities, nursery, higher, internet, romantic, famrel, freetime, goout, dalc, walc,
+				data_list.append((school, sex, age, address, famsize, pstatus, medu, fedu, traveltime, studytime,failures*2,
+				schoolsup, famsup, paid, activities, nursery, higher, internet, romantic, famrel, freetime*3, goout, dalc, walc*5,
 				health, absences))
 
-				target_list.append(avrg)
+				if avrg >= 50:
+					target_list.append(1)
+				else:
+					target_list.append(0)
 
 		return (data_list, target_list)
