@@ -3,12 +3,13 @@ import csv
 class CSVParser():
 
 	def normalize(self, data, max):
-		return int(round(float(data) / float(max) * 100))
+		return round(float(data) / float(max) * 100)
 
 	def parse(self, location):
 
 		data_list = []
 		target_list = []
+		pairs = []
 
 		with open(location, 'rb') as csvfile:
 			reader = csv.reader(csvfile, delimiter = ';', quotechar = '"')
@@ -90,13 +91,14 @@ class CSVParser():
 				f = self.normalize(int(row[32]), 20)
 				avrg = int(round((g1 * 0.3 + g2 * 0.3 + f * 0.4)))
 
-				data_list.append((school, sex, age, address, famsize, pstatus, medu, fedu, traveltime, studytime,failures*2,
-				schoolsup, famsup, paid, activities, nursery, higher, internet, romantic, famrel, freetime*3, goout, dalc, walc*5,
+				data_list.append((school, sex, age, address, famsize, pstatus, medu, fedu, traveltime, studytime,failures,
+				schoolsup, famsup, paid, activities, nursery, higher, internet, romantic, famrel, freetime, goout, dalc, walc,
 				health, absences))
 
+				result = 0
 				if avrg >= 50:
-					target_list.append(1)
-				else:
-					target_list.append(0)
+					result = 1
+
+				target_list.append(f)
 
 		return (data_list, target_list)

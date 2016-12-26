@@ -27,6 +27,21 @@ data_target = csvparser.parse("student-mat.csv")
 grade_x = np.array(data_target[0])
 grade_y = np.array(data_target[1])
 
+from sklearn import linear_model
+reg = linear_model.LinearRegression()
+reg.fit(data_target[0], data_target[1])
+coefs = np.array(reg.coef_)
+
+print coefs
+
+coef_grade_x = []
+for i in range(0,len(grade_x)):
+	coef_features = []
+	for j in range(0, len(grade_x[i])):
+		coef_features.append(coefs[j] * grade_x[i][j])
+	coef_grade_x.append(coef_features)
+
+grade_x = np.array(coef_grade_x)
 
 # Split iris data in train and test data
 # A random permutation, to split the data randomly
@@ -49,10 +64,18 @@ truth =  grade_y_test
 print "KNN Accuracy (ours): ", accuracy_distance2(truth, prediction)
 print "KNN Accuracy (theirs):", accuracy_score(truth, prediction)
 
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
+features = ["school", "sex", "age", "address", "famsize", "pstatus", "medu", "fedu", "traveltime", "studytime","failures",
+"schoolsup", "famsup", "paid", "activities", "nursery", "higher", "internet", "romantic", "famrel", "freetime", "goout", "dalc", "walc",
+"health", "absences"]
 
-print truth
+import matplotlib.pyplot as plt
+#plt.axis([0,25,-0.1,0.1])
+plt.xlabel('Features')
+plt.ylabel('Weight')
+abscoefs = [abs(x) for x in coefs]
+plt.xticks(np.array(range(0,len(features))), features, rotation = 90)
+plt.plot(np.array(range(0,len(features))), abscoefs, 'r*')
+plt.show()
+
 print prediction
+print truth
