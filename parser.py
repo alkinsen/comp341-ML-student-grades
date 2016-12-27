@@ -99,6 +99,6 @@ class CSVParser():
 				if avrg >= 50:
 					result = 1
 
-				target_list.append(f)
+				target_list.append(result)
 
 		return (data_list, target_list)
